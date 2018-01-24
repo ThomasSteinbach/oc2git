@@ -1,3 +1,10 @@
+set -e
+
+origin=$(dirname $(readlink "$0"))
+
+# check if user is in wrong project
+"$origin/check-project.sh"
+
 # check for changes
 oc export is,cm,pvc,sa,bc,dc,svc,route > api-objects.tmp
 retVal=$?
@@ -9,7 +16,7 @@ else
   exit 1
 fi
 
-python fixDockerUrls.py api-objects.yaml
+python "${origin}/fixDockerUrls.py" api-objects.yaml
 
 if [[ $(git status --porcelain) ]]; then
   git diff -U20
