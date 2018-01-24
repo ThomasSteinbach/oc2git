@@ -1,6 +1,6 @@
 set -e
 
-origin=$(dirname $(readlink "$0"))
+origin=$(dirname $(readlink -f "$0"))
 
 # check if user is in wrong project
 "$origin/check-project.sh"
@@ -18,7 +18,7 @@ fi
 
 python "${origin}/fixDockerUrls.py" api-objects.yaml
 
-if [[ $(git status --porcelain) ]]; then
+if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git diff -U20
   git add api-objects.yaml
   git commit
