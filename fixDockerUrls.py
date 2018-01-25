@@ -19,10 +19,14 @@ for i in fExport['items']:
        'kubectl.kubernetes.io/last-applied-configuration' in i['metadata']['annotations']):
           del i['metadata']['annotations']['kubectl.kubernetes.io/last-applied-configuration']
     if(i['kind'] == 'ImageStream'):
-        del i['metadata']['annotations']['openshift.io/image.dockerRepositoryCheck']
-        tags = i['spec']['tags'][0]
-        if tags['annotations'] is not None:
-            tags['from']['name'] = tags['annotations']['openshift.io/imported-from']
+
+        meta_annot=i['metadata']['annotations']
+        if 'openshift.io/image.dockerRepositoryCheck' in meta_annot:
+          del meta_annot['openshift.io/image.dockerRepositoryCheck']
+
+        spec_tags = i['spec']['tags'][0]
+        if spec_tags['annotations'] is not None:
+            spec_tags['from']['name'] = spec_tags['annotations']['openshift.io/imported-from']
 
 stream = yaml.dump(fExport, default_flow_style=False)
 
