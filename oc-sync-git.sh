@@ -23,3 +23,5 @@ if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git add api-objects.yaml
   git commit
 fi
+
+cp "${origin}/README-oc2git.md" .
