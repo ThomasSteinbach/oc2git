@@ -27,13 +27,23 @@ for i in fExport['items']:
           del i['metadata']['annotations']['kubectl.kubernetes.io/last-applied-configuration']
     if(i['kind'] == 'ImageStream'):
 
-        meta_annot=i['metadata']['annotations']
-        if 'openshift.io/image.dockerRepositoryCheck' in meta_annot:
-          del meta_annot['openshift.io/image.dockerRepositoryCheck']
+        is_meta_annot=i['metadata']['annotations']
+        if 'openshift.io/image.dockerRepositoryCheck' in is_meta_annot:
+          del is_meta_annot['openshift.io/image.dockerRepositoryCheck']
 
         spec_tags = i['spec']['tags'][0]
         if spec_tags['annotations'] is not None:
             spec_tags['from']['name'] = spec_tags['annotations']['openshift.io/imported-from']
+    if(i['kind'] == 'PersistentVolumeClaim'):
+      pvc_meta_annot = i['metadata']['annotations']
+      if 'control-plane.alpha.kubernetes.io/leader' in pvc_meta_annot:
+        del pvc_meta_annot['control-plane.alpha.kubernetes.io/leader']
+      if 'pv.kubernetes.io/bind-completed' in pvc_meta_annot:
+        del pvc_meta_annot['pv.kubernetes.io/bind-completed']
+      if 'pv.kubernetes.io/bound-by-controller' in pvc_meta_annot:
+        del pvc_meta_annot['pv.kubernetes.io/bound-by-controller']
+      if 'volumeName' in i['spec']:
+        del i['spec']['volumeName']
 
 stream = yaml.dump(fExport, default_flow_style=False)
 
