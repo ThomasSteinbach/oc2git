@@ -8,8 +8,8 @@ if [ $retVal -ne 0 ]; then
 fi
 
 if [ ! -f .last_project ] || [ ! -f api-objects.yaml ]; then
-  echo "This script is meant to be run within repositories"
-  echo "created with `oc-edit` or `oc-sync-git`.
+  echo 'This script is meant to be run within repositories'
+  echo 'created with oc-edit or oc-sync-git.'
   exit 0
 fi
 
@@ -29,7 +29,7 @@ if [ "$current_project" != "$old_project" ]; then
   ASK_FOR_PROJECT_CHANGE=true
 fi
 
-sed "s/OC_PROJECT_NAME/foo/g" api-objects.yaml | oc create -f -
+sed "s/OC_PROJECT_NAME/${current_project}/g" api-objects.yaml | oc create -f -
 
 if [ ! -z "$ASK_FOR_PROJECT_CHANGE" ]; then
   read -p "Do you want to write the new project name to this repository? (y/n)" switchproj
