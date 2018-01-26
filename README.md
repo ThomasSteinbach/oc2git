@@ -21,15 +21,17 @@ Otherwise you have to manually add symlinks of following files to your $PATH:
 Usage
 -----
 
-When using the default install script, the two commands `oc-sync-git` and `oc-edit` should
-be available to you system wide.
+When using the default install script, the three commands `oc-sync-git`, `oc-edit` and `oc-apply`
+should be available to you system wide.
 
   * `oc-sync-git` will export all OpenShift API objects but secrets of your current active
-     project to the `api-objects.yaml` file and create a git commit if changes occur
+     project to the _api-objects.yaml_ file and create a git commit if changes occur
   * `oc-edit` will
     * first call `oc-sync-git` to gather all externally made changes
     * second open an editor for changing all your OpenShift API objects but secrets
     * finally call `oc-sync-git` again to commit your changes to Git
+  * `oc-apply` will import the previously exported API objects to the current logged in
+    OpenShift project again
 
 To setup a new project you need to fullfill following prerequisites:
 
@@ -44,3 +46,7 @@ Then you can call
   'from outside' and want to commit them to git
 
 None of the scripts will do a `git push`. This you have to do explicitly!
+
+The scripts will replace every occurence of the project name in the exported _api-objects.yaml_
+with the placeholder `OC_PROJECT_NAME`. You should use the `oc-apply` to import the objects
+conveniently to the current OpenShift project.

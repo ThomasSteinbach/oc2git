@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 origin=$(dirname $(readlink -f "$0"))

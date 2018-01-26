@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 origin=$(dirname $(readlink -f "$0"))
@@ -16,7 +18,8 @@ else
   exit 1
 fi
 
-python "${origin}/fixDockerUrls.py" api-objects.yaml
+projectname="$(sed -E 's/^Using project "(.*)" on.*$/\1/' .last_project)"
+python "${origin}/fixDockerUrls.py" api-objects.yaml "$projectname"
 
 if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git diff -U20

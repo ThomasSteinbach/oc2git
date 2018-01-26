@@ -8,6 +8,13 @@ import sys
 import yaml
 import re
 
+if len(sys.argv) < 2:
+    print("Please provide export file path and project name as arguments")
+    sys.exit(1)
+
+filename = sys.argv[1]
+projectname = sys.argv[2]
+
 # load yaml to fExport variable
 with open(sys.argv[1]) as f:
     fExport = yaml.load(f)
@@ -32,6 +39,8 @@ stream = yaml.dump(fExport, default_flow_style=False)
 
 # fix date formats
 stream = re.sub('(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})',r'\1T\2Z',stream)
+stream = stream.replace(projectname, 'OC_PROJECT_NAME')
+stream = stream.replace('\n\n        \'', '\'')
 
 with open(sys.argv[1], "w") as f:
-    f.write(stream.replace('\n\n        \'', '\''))
+    f.write(stream)
