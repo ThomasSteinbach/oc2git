@@ -29,7 +29,7 @@ if [ "$current_project" != "$old_project" ]; then
   ASK_FOR_PROJECT_CHANGE=true
 fi
 
-sed "s/OC_PROJECT_NAME/${current_project}/g" api-objects.yaml | oc create -f -
+sed "s/OC_PROJECT_NAME/${current_project}/g" api-objects.yaml | oc apply -f -
 
 if [ ! -z "$ASK_FOR_PROJECT_CHANGE" ]; then
   read -p "Do you want to write the new project name to this repository? (y/n)" switchproj
