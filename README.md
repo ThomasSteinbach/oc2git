@@ -50,3 +50,20 @@ None of the scripts will do a `git push`. This you have to do explicitly!
 The scripts will replace every occurence of the project name in the exported _api-objects.yaml_
 with the placeholder `OC_PROJECT_NAME`. You should use the `oc-apply` to import the objects
 conveniently to the current OpenShift project.
+
+Troubleshooting
+---------------
+
+_After importing the API objects to OpenShift the Image "docker-registry.default.svc:5000/<project>/<image>" was not found._
+
+The image is originated from an external source, which is not captured in he imagestrems metadata.
+Please set the following in your OpenShift ImageStream definition and run oc-sync-git to update
+the _api-objects.yaml_ file.
+
+```
+kind: ImageStream
+spec:
+  tags:
+  - annotations: 
+      openshift.io/imported-from: <registry>/<image>:<tag>
+```
