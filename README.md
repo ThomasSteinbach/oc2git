@@ -54,7 +54,7 @@ conveniently to the current OpenShift project.
 Troubleshooting
 ---------------
 
-_After importing the API objects to OpenShift the Image "docker-registry.default.svc:5000/<project>/<image>" was not found._
+_After importing the API objects to OpenShift the Image `docker-registry.default.svc:5000/<project>/<image>` was not found._
 
 The image is originated from an external source, which is not captured in he imagestrems metadata.
 Please set the following in your OpenShift ImageStream definition and run oc-sync-git to update
