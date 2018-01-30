@@ -7,6 +7,7 @@
 import sys
 import yaml
 import re
+from subprocess import check_output
 
 if len(sys.argv) < 2:
     print("Please provide export file path and project name as arguments")
@@ -19,21 +20,29 @@ projectname = sys.argv[2]
 with open(sys.argv[1]) as f:
     fExport = yaml.load(f)
 
+imagestreams = yaml.load(check_output(["oc","get","is","-o","yaml"]))
+
 for i in fExport['items']:
+
     if 'status' in i:
       del i['status']
     if ('annotations' in i['metadata'] and
        'kubectl.kubernetes.io/last-applied-configuration' in i['metadata']['annotations']):
           del i['metadata']['annotations']['kubectl.kubernetes.io/last-applied-configuration']
-    if(i['kind'] == 'ImageStream'):
 
+    if(i['kind'] == 'ImageStream'):
         is_meta_annot=i['metadata']['annotations']
         if 'openshift.io/image.dockerRepositoryCheck' in is_meta_annot:
           del is_meta_annot['openshift.io/image.dockerRepositoryCheck']
 
-        spec_tags = i['spec']['tags'][0]
-        if spec_tags['annotations'] is not None:
-            spec_tags['from']['name'] = spec_tags['annotations']['openshift.io/imported-from']
+        for tag in i['spec']['tags']:
+          for imgstr in imagestreams['items']:
+            if i['metadata']['name'] == imgstr['metadata']['name']:
+              if 'tags' in imgstr['spec']:
+                for istag in imgstr['spec']['tags']:
+                  if tag['name'] == istag['name']:
+                    tag['from']['name'] = istag['from']['name']
+
     if(i['kind'] == 'PersistentVolumeClaim'):
       pvc_meta_annot = i['metadata']['annotations']
       if 'control-plane.alpha.kubernetes.io/leader' in pvc_meta_annot:
