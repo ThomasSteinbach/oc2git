@@ -58,7 +58,10 @@ stream = yaml.dump(fExport, default_flow_style=False)
 
 # fix date formats
 stream = re.sub('(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})',r'\1T\2Z',stream)
-stream = stream.replace(projectname, 'OC_PROJECT_NAME')
+print('(image: [a-zA-Z0-9.:-_]+\/)' + projectname + '(\/.*$)')
+stream = re.sub('(image:\s+[\w\d.:_-]+\/)' + projectname + '(\/.*)',r'\1OC_PROJECT_NAME\2',stream)
+stream = re.sub('(name:\s+[\w\d.:_-]+\/)' + projectname + '(\/.*)',r'\1OC_PROJECT_NAME\2',stream)
+stream = stream.replace('namespace: ' + projectname, 'namespace: OC_PROJECT_NAME')
 stream = stream.replace('\n\n        \'', '\'')
 
 with open(sys.argv[1], "w") as f:
