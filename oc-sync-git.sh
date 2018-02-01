@@ -23,7 +23,7 @@ python "${origin}/fixDockerUrls.py" api-objects.yaml "$projectname"
 
 if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git diff -U20
-  git add api-objects.yaml
+  git add api-objects.yaml .last_project README-oc2git.md
   git commit
 fi
 
