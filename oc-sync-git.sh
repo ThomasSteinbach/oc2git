@@ -21,10 +21,10 @@ fi
 projectname="$(sed -E 's/^Using project "(.*)" on.*$/\1/' .last_project)"
 python "${origin}/fixDockerUrls.py" api-objects.yaml "$projectname"
 
+cp "${origin}/README_oc2git.md" .
+
 if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git diff -U20
   git add api-objects.yaml .last_project README_oc2git.md
   git commit
 fi
-
-cp "${origin}/README_oc2git.md" .
