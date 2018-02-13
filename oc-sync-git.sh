@@ -7,8 +7,16 @@ origin=$(dirname $(readlink -f "$0"))
 # check if user is in wrong project
 "$origin/check-project.sh"
 
+# update .labels file, which labels to use
+"$origin/check-labels.sh" $*
+labels="$(cat .labels)"
+
 # check for changes
-oc export is,cm,pvc,sa,bc,dc,svc,route > api-objects.tmp
+if [ "$labels" == "" ]; then
+  oc export is,cm,pvc,sa,bc,dc,svc,route > api-objects.tmp
+else
+  oc export is,cm,pvc,sa,bc,dc,svc,route -l $labels > api-objects.tmp
+fi
 retVal=$?
 
 if [ $retVal -eq 0 ]; then
@@ -25,6 +33,6 @@ cp "${origin}/README_oc2git.md" .
 
 if [[ $(git status --porcelain api-objects.yaml) ]]; then
   git diff -U20
-  git add api-objects.yaml .last_project README_oc2git.md
+  git add api-objects.yaml README_oc2git.md .last_project .labels
   git commit
 fi
