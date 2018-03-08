@@ -35,13 +35,14 @@ for i in fExport['items']:
         if 'openshift.io/image.dockerRepositoryCheck' in is_meta_annot:
           del is_meta_annot['openshift.io/image.dockerRepositoryCheck']
 
-        for tag in i['spec']['tags']:
-          for imgstr in imagestreams['items']:
-            if i['metadata']['name'] == imgstr['metadata']['name']:
-              if 'tags' in imgstr['spec']:
-                for istag in imgstr['spec']['tags']:
-                  if tag['name'] == istag['name']:
-                    tag['from']['name'] = istag['from']['name']
+        if 'tags' in i['spec']:
+          for tag in i['spec']['tags']:
+            for imgstr in imagestreams['items']:
+              if i['metadata']['name'] == imgstr['metadata']['name']:
+                if 'tags' in imgstr['spec']:
+                  for istag in imgstr['spec']['tags']:
+                    if tag['name'] == istag['name']:
+                      tag['from']['name'] = istag['from']['name']
 
     if(i['kind'] == 'PersistentVolumeClaim'):
       pvc_meta_annot = i['metadata']['annotations']
