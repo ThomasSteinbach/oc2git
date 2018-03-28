@@ -52,8 +52,6 @@ for i in fExport['items']:
         del pvc_meta_annot['pv.kubernetes.io/bind-completed']
       if 'pv.kubernetes.io/bound-by-controller' in pvc_meta_annot:
         del pvc_meta_annot['pv.kubernetes.io/bound-by-controller']
-      if 'volumeName' in i['spec']:
-        del i['spec']['volumeName']
 
 stream = yaml.dump(fExport, default_flow_style=False)
 
