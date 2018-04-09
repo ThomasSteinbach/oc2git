@@ -59,3 +59,5 @@ commit just parts of your OpenShift project to the git repository. An example:
 ```
 oc-sync-git app=myapplication
 ```
+
+.
